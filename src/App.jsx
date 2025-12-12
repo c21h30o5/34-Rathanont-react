@@ -1,9 +1,11 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./views/Home";
-import Admin from "./views/Admin";
-import User from "./views/User";
+import Admin from "./views/AdminHomeView";
+import User from "./views/UserHomeView";
 import Owner from "./views/Owner";
+import AdminHomeView from "./views/AdminHomeView";
+import UserHomeView from "./views/UserHomeView";
 
 const router = createBrowserRouter([
   {
@@ -16,14 +18,15 @@ const router = createBrowserRouter([
     ),
     children: [
       {path: "/",element: <Home />},
-      {path: "admin",element: <Admin />},
-      {path: "user",element: <User />},
+      {path: "admin",element: <AdminHomeView />},
+      {path: "user",element: <UserHomeView />},
       {path: "owner",element: <Owner />},
     ]
   }
 ])
 
 export default function App() {
+
   return (
     <RouterProvider router={router}/>
   );

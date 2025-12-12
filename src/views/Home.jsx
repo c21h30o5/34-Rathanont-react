@@ -1,27 +1,41 @@
-import { useNavigate } from "react-router-dom"
-
+import { useState } from 'react';
+import ViewToggleButton from '../components/ViewToggleButton';
+import UserHomeView from './UserHomeView';
+import AdminHomeView from './AdminHomeView';
 
 export default function Home() {
-    const navigate = useNavigate()
+    const [view, setView] = useState("");
+
     return (
-        <div className="flex flex-col items-center">
-            <h1 className="text-center text-5xl font-semibold pt-15">
-                Generation Thailand <br></br>
-                React - Assessment</h1>
-            <div className="flex justify-around w-full pt-12">
-                <button
-                    className="bg-white font-semibold py-5 px-6 border border-gray-300 rounded-md shadow-md hover:bg-gray-50 transition"
-                    onClick={() => navigate('/user')} // สมมติว่า route สำหรับ User คือ /user
+        <div className="flex flex-col items-center pt-24 min-h-screen bg-gray-100">
+            <h1 className="text-center text-6xl font-semibold mb-16 text-gray-800">
+                Generation Thailand <br />
+                {view === "user" && "Home - User View"}
+                {view === "admin" && "Home - Admin View"}
+                {view === "" && "React - Assessment"}
+            </h1>
+
+            <div className="flex gap-x-6 mb-12">
+                <ViewToggleButton
+                    onClick={() => {
+                        setView("user");
+                    }}
                 >
-                User Home View
-                </button>
-                <button
-                    className="bg-white font-semibold py-5 px-6 border border-gray-300 rounded-md shadow-md hover:bg-gray-50 transition"
-                    onClick={() => navigate('/admin')} // สมมติว่า route สำหรับ Admin คือ /admin
+                    User Home View
+                </ViewToggleButton>
+
+                <ViewToggleButton
+                    onClick={() => {
+                        setView("admin");
+                    }}
                 >
-                Admin Home View
-                </button>
+                    Admin Home View
+                </ViewToggleButton>
             </div>
+
+            {view === "user" && <UserHomeView />}
+            {view === "admin" && <AdminHomeView />}
+
         </div>
     )
 }
