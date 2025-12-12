@@ -4,13 +4,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function UserHomeView() {
-    //const navigate = useNavigate();
-    // State สำหรับเก็บข้อมูลพนักงาน
     const [members, setMembers] = useState([]);
-    // State สำหรับแสดงสถานะการโหลด
     const [isLoading, setIsLoading] = useState(true);
-    // State สำหรับจัดการข้อผิดพลาดจากการเรียก API
-    const [error, setError] = useState(null); 
+    const [error, setError] = useState(null);
 
     const API_URL = "https://67eca027aa794fb3222e43e2.mockapi.io/members"; 
 

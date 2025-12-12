@@ -1,18 +1,28 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
+import CreateUserForm from '../components/CreateUserForm';
 
 export default function AdminHomeView() {
     const [members, setMembers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     // State สำหรับ Form เพิ่ม User ใหม่
-    const [newMember, setNewMember] = useState({ name: '', lastname: '', position: '' });
+    const [newMember, setNewMember] = useState({
+        name: '',
+        lastname: '',
+        position: ''
+    });
     const API_URL = "https://67eca027aa794fb3222e43e2.mockapi.io/members"; 
-
-    // ฟังก์ชันดึงข้อมูล (ใช้ซ้ำได้)
+    // จัดการการเปลี่ยนแปลงข้อมูลในกล่อง Input
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewMember(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+    // ดึงข้อมูล
     const fetchMembers = async () => {
-        // ... (Logic การ fetch เหมือนใน UserHomeView) ...
-        // [โค้ด Logic fetchMembers เหมือน UserHomeView]
         setIsLoading(true);
         setError(null);
         try {
@@ -38,22 +48,33 @@ export default function AdminHomeView() {
         return <div className="text-center mt-20 text-xl font-semibold text-red-600">Error: {error}</div>;
     }
 
+    // ฟังก์ชันจัดการปุ่ม Save (POST)
+    const handleSave = async (e) => {
+        e.preventDefault();
+        if (!newMember.name || !newMember.lastname || !newMember.position) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        try {
+            await axios.post(API_URL, newMember);
+            setNewMember({ name: '', lastname: '', position: '' });
+            await fetchMembers();
+            alert(`User ${newMember.name} created successfully!`);
+        } catch (err) {
+            console.error("Error creating user:", err);
+            setError("Failed to create user.");
+        }
+    };
+
     return (
         <div className="flex flex-col items-center p-8">
-            {/* 1. Form Create User Here (ตามภาพ) */}
-            <div className="mb-8 w-full max-w-4xl">
-                <h3 className="text-xl font-semibold mb-4 text-gray-800">Create User Here</h3>
-                <div className="flex gap-4">
-                    <input type="text" placeholder="Name" className="p-2 border border-gray-300 rounded flex-grow" />
-                    <input type="text" placeholder="Last Name" className="p-2 border border-gray-300 rounded flex-grow" />
-                    <input type="text" placeholder="Position" className="p-2 border border-gray-300 rounded flex-grow" />
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-150">
-                        Save
-                    </button>
-                </div>
-            </div>
+            <CreateUserForm
+                newMember={newMember}
+                handleChange={handleChange}
+                handleSave={handleSave}
+            />
 
-            {/* 2. ตารางแสดงข้อมูลพร้อมคอลัมน์ Action */}
             <div className="w-full max-w-4xl overflow-x-auto shadow-lg rounded-lg border">
                 <table className="min-w-full bg-white divide-y divide-gray-200">
                     <thead className="bg-gray-50">
